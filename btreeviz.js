@@ -103,7 +103,7 @@ function renderTree(parent, root, width, x0, x1) {
         .attr('height', SZ)
         .attr('fill', fill)
         .attr('stroke-width', 2)
-        .attr('stroke', color);
+        .attr('stroke', (active) ? color : 'gray');
       d3.select(this)
         .append('text')
         .attr('dy', '0.31em')
@@ -135,7 +135,7 @@ function renderTree(parent, root, width, x0, x1) {
       container
         .attr('fill', fill)
         .attr('stroke-width', 2)
-        .attr('stroke', color);
+        .attr('stroke', (active) ? color : 'gray');
 
       const PAD = 10;
 
