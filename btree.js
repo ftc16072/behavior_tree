@@ -667,15 +667,15 @@ function addToArrayMap(map, key, value) {
 
 const SAMPLE_TREE = `
 ->
-|    ?
-|    |    ->
-|    |    |   (IsLeftSpike)
-|    |    |   [SetLeftSpikeTrajectory]
-|    |    ->
-|    |    |   (IsRightSpike)
-|    |    |   [SetRightSpikeTrajectory]
-|    |    [SetMiddleSpikeTrajectory]
-|    [FollowTrajectory]
+|  ?
+|  |  ->
+|  |  |  (IsLeftSpike)
+|  |  |  [SetLeftSpikeTrajectory]
+|  |  ->
+|  |  |  (IsRightSpike)
+|  |  |  [SetRightSpikeTrajectory]
+|  |  [SetMiddleSpikeTrajectory]
+|  [FollowTrajectory]
 `;
 
 /**
