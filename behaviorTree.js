@@ -122,6 +122,15 @@ class Action extends Node {
     super(name, NodeType.ACTION);
     this.setStatus(status);
   }
+  nextStatus() {
+    if (this.nodeStatus == NodeStatus.RUNNING) {
+      this.setStatus(NodeStatus.SUCCESS);
+    } else if (this.nodeStatus == NodeStatus.SUCCESS) {
+      this.setStatus(NodeStatus.FAILED);
+    } else {
+      this.setStatus(NodeStatus.RUNNING);
+    }
+  }
 }
 class Condition extends Node {
   constructor(name, hasNot = false, status = NodeStatus.FAILED) {
@@ -138,6 +147,14 @@ class Condition extends Node {
       }
     }
     return nodeStatus;
+  }
+  nextStatus(status) {
+    if (this.nodeStatus == NodeStatus.SUCCESS) {
+      this.setStatus(NodeStatus.FAILED);
+    }
+    else if (this.nodeStatus == NodeStatus.FAILED) {
+      this.setStatus(NodeStatus.SUCCESS);
+    }
   }
 }
 /**
