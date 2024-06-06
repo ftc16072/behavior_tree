@@ -23,6 +23,11 @@ function renderTree(parent, root, width, x0, x1) {
       y = tree.dx - x0 + tree.drag_dy;
     return `translate(${x}, ${y}) scale(${root.scale})`;
   }
+  function render() {
+    root.data.deactivate();
+    root.data.tick();
+    renderTree(parent, root, width, x0, x1);
+  }
 
   const svg = d3.select(parent)
     .html('')
@@ -146,6 +151,10 @@ function renderTree(parent, root, width, x0, x1) {
         .attr('dy', '0.31em')
         .attr('text-anchor', 'start')
         .attr('fill', text_color)
+        .on("click", function (ev, d) {
+          d.data.nextStatus();
+          render();
+        })
         .text(name)
         .clone(true).lower()
         .node();
@@ -170,6 +179,6 @@ function renderTree(parent, root, width, x0, x1) {
     var status = getFriendlyStatus(n.data.status());
     d3.select(this)
       .append("svg:title")
-      .text(n => `Node: ${n.data.hasNot ? "NOT " : ""}${n.data.name} ${k}\nActive: ${active}\nStatus: ${status}`);
+      .text(n => `Node: ${n.data.hasNot ? "NOT " : ""}${n.data.name}\nActive: ${active}\nStatus: ${status}`);
   });
 }
