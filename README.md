@@ -13,10 +13,7 @@ will provide a plethora of information.
 
 This project provides a simple demo to load and interact with a
 behavior tree.  The values of conditions and actions can be switched
-in the sidebar that is accessed from the top left menu of the demo.
-The displayed tree can be panned, zoomed, and stretched both
-horizontally and vertically.  The instructions for these interactions
-can be accessed from '?' button in the top right of the demo.
+by clicking on them.
 
 As one interacts with the tree by toggling conditons and actions the
 implementation will show the paths of the tree that have been explored
@@ -38,27 +35,7 @@ _successful_ or _failed_ state, never _running_.
 ## Syntax
 
 The demo allows the loading of any arbitrary tree and the syntax is
-simple and easy to understand.  By default when the demo is loaded in
-the browser the default tree for the behavior of Pac-man would be
-written as:
-
-```tree
-?
-|    ->
-|    |    (Ghost Close)
-|    |    ?
-|    |    |    ->
-|    |    |    |    !(Ghost Scared)
-|    |    |    |    (Power Pill Close)
-|    |    |    |    [Eat Power Pill]
-|    |    |    ->
-|    |    |    |    (Ghost Scared)
-|    |    |    |    [Chase Ghost]
-|    |    |    [Avoid Ghost]
-|    =1
-|    |    [Eat Pills]
-|    |    [Eat Fruit]
-```
+simple and easy to understand.  
 
 The complete syntax will be discussed here.  There is a limited form
 of error reporting as the parser will stop at the first error which
@@ -142,83 +119,3 @@ node will be _failed_; otherwise, it will be considered _running_.
 ### Parsing behavior tree and executing it
 
 The `BehaviorTree` may be used programmatically to execute the behavior modeled in the tree:
-
-```javascript
-const { BehaviorTree,
-    Fallback, Sequence, Parallel, Action, Condition,
-    FALLBACK, SEQUENCE, PARALLEL, ACTION, CONDITION,
-    fallback, sequence, parallel, action, condition,
-    SUCCESS, FAILED, RUNNING, FINISHED,
-    SAMPLE_TREE, getFriendlyStatus } = require('../btree').bt;
-```
-
-```javascript
-let tree = BehaviorTree.fromText(`
-?
-|   !(have hunger)
-|   [eat]`);
-
-// subscribe to action activation
-tree.onActionActivation(actionNode => {
-    switch (actionNode.name) {
-        case 'eat':
-            console.log(getFriendlyStatus(actionNode.status())); // prints 'running'
-            if (actionNode.active()) { // in general we should check that the action is in an active branch
-                console.log('Started eating...');
-                // no longer hungry!
-                tree.setConditionStatus('have hunger', FAILED);
-                console.log('Done eating...');
-                tree.setActionStatus('eat', SUCCESS);
-            }
-    }
-});
-tree.root.tick();
-
-console.log('Initial state:');
-console.log(getFriendlyStatus(tree.root.status())); // prints 'success'
-console.log(tree.root.active()); // prints true
-
-// then we get hunger
-tree.setConditionStatus('have hunger', SUCCESS);
-let statusAfterHungerIsTrue = tree.root.tick();
-console.log(getFriendlyStatus(statusAfterHungerIsTrue)); // prints 'success', because the action was executed synchronously as part of the tick
-
-// now 'Started/Done eating...' should be printed
-
-// final state:
-tree.root.tick();
-console.log(getFriendlyStatus(tree.root.status())); // prints 'success'
-```
-
-This approach allows the separation between the tree model and the action implementation.
-
-### Building behavior tree and executing it
-
-Another way to use the `BehaviorTree` is to programmatically construct the tree nodes, including the action implementation:
-
-```javascript
-// define the action 'eat' implementation
-let onEat = function (actionNode) {
-    switch (actionNode.name) {
-        case 'eat':
-            console.log(getFriendlyStatus(actionNode.status())); // prints 'running'
-            if (actionNode.active()) { // in general we should check that the action is in an active branch
-                console.log('Started eating...');
-                // no longer hungry!
-                tree.setConditionStatus('have hunger', FAILED);
-                console.log('Done eating...');
-                tree.setActionStatus('eat', SUCCESS);
-            }
-    }
-};
-
-// ?
-// |   !(have hunger)
-// |   [eat]`
-
-let rootNode = fallback([
-    condition("have hunger", true),
-    action("eat", onEat)
-]);
-let tree = new BehaviorTree(rootNode);
-```
