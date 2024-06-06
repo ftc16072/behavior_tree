@@ -32,6 +32,7 @@
       let graphElement = document.getElementById('graph');
       codeElement.value = SAMPLE_TREE;
       setupControls(graphElement, codeElement);
+      loadTree(graphElement, codeElement);
     }
   </script>
 </head>
@@ -85,14 +86,6 @@
         </button>
       </div>
     </header>
-    <div class="mdl-layout__drawer tree-drawer">
-      <span class="mdl-layout-title">Conditions</span>
-      <nav id="tree-conditions" class="mdl-navigation">
-      </nav>
-      <span class="mdl-layout-title">Actions</span>
-      <nav id="tree-actions" class="mdl-navigation">
-      </nav>
-    </div>
     <main class="mdl-layout__content">
       <div>
         <table>
