@@ -38,6 +38,16 @@ class Node {
     this.setActive(true);
     return this.status();
   }
+  updateNameStatus(name, status) {
+    if (this.name == name) {
+      this.setStatus(status);
+    }
+    if (this.children) {
+      for (let i = 0; i < this.children.length; i++) {
+        this.children[i].updateNameStatus(name, status);
+      }
+    }
+  }
 
   deactivate() {
     this.setActive(false);

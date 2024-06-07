@@ -153,6 +153,7 @@ function renderTree(parent, root, width, x0, x1) {
         .attr('fill', text_color)
         .on("click", function (ev, d) {
           d.data.nextStatus();
+          root.data.updateNameStatus(d.data.name, d.data.status());
           render();
         })
         .text(name)
