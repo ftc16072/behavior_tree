@@ -104,15 +104,3 @@ function generateTree(indent, node) {
   }
   return result;
 }
-
-/*
-public static Node root(){
-        return new Parallel(5,
-                new UpdateIntake(),
-                new ResetGyro(),
-                new DriveFieldRelative(),
-                new UpdateClimber()
-
-        );
-    }
-*/
