@@ -87,7 +87,7 @@ class Sequence extends Node {
 
 class Parallel extends Node {
   constructor(successCount, children = []) {
-    super('\u21C9', PARALLEL, children || []);
+    super('\u21C9', NodeType.PARALLEL, children || []);
     this.successCount = successCount;
   }
   tick() {

@@ -7,6 +7,9 @@ class BehaviorTree {
     /** @property {Map<string, Condition[]>} conditions list of conditions grouped by name */
     this.conditions = new Map();
 
+    /** @property {Set<String>, Node[]} nodes list of unique nodes */
+    this.nodes = new Map();
+
     if (this.root) {
       this.extractActionsAndConditions(this.root);
     }
@@ -35,11 +38,18 @@ class BehaviorTree {
       this.addToArrayMap(this.actions, node.name, node);
     } else if (node instanceof Condition) {
       this.addToArrayMap(this.conditions, node.name, node);
+    } else if (node instanceof Sequence) {
+      this.addToArrayMap(this.nodes, "Sequence", node);
+    } else if (node instanceof Parallel) {
+      this.addToArrayMap(this.nodes, "Parallel", node);
+    } else if (node instanceof Fallback) {
+      this.addToArrayMap(this.nodes, "Fallback", node);
     }
     if (node.children) {
       node.children.forEach(c => this.extractActionsAndConditions(c));
     }
   }
+
   /**
  * Updates tree with new condition value.
  * @param {string} name condition name

@@ -15,6 +15,7 @@
   <script defer src="behaviorTreeDrawing.js"></script>
   <script defer src="behaviorTreeControls.js"></script>
   <script defer src="behaviorTreeFunctionality.js"></script>
+  <script defer src="behaviorTreeGenerateJava.js"></script>
   <script>
     const SAMPLE_TREE = `->
 |  ?
@@ -30,9 +31,13 @@
     window.onload = function () {
       let codeElement = document.getElementById('code');
       let graphElement = document.getElementById('graph');
+      let javaElement = document.getElementById('java');
+      let team_number = document.getElementById('team_number').value;
+      let tree_name = document.getElementById('tree_name').value;
+
       codeElement.value = SAMPLE_TREE;
-      setupControls(graphElement, codeElement);
-      loadTree(graphElement, codeElement);
+      setupControls(graphElement, codeElement, javaElement);
+      loadTree(graphElement, codeElement, javaElement, team_number, tree_name);
     }
   </script>
 </head>
@@ -92,13 +97,22 @@
         <table>
           <TR>
             <TD>
+              <textarea id="code" style="height:40vh;width:90vh;"><!-- text tree goes here --></textarea>
+            </TD>
+            <TD>
               <UL>
-                <LI>? - Failover</LI>
+                <LI>? - Fallback</LI>
                 <LI>-> - Sequential</LI>
                 <LI>=2 - Parallel (with number)</LI>
                 <LI>(Conditional)</LI>
                 <LI>[Action]</LI>
               </UL>
+              <br />
+              Num:<input type="text" id="team_number" name="team_number" value="16072" />
+              <br />
+              Tree:<input type="text" id="tree_name" name="tree_name" value="Sample" />
+              <br />
+              <br />
               <button id="codeUpdate" style="background-color: #FDB812" class="mdl-button
                                                           mdl-js-button
                                                           mdl-button--raised
@@ -106,9 +120,11 @@
                                                           mdl-button--accent">
                 Update
               </button>
+
             </TD>
             <TD>
-              <textarea id="code" style="height:40vh;width:90vh;"><!-- Your content goes here --></textarea>
+              <textarea id="java" wrap="off" readonly style="height:40vh;width:60vh;background-color: grey"
+                ;><!-- Your content goes here --></textarea>
             </TD>
           </TR>
         </table>

@@ -76,15 +76,18 @@ function showTree(tree, parent) {
   render();
 }
 
-function loadTree(graphElement, codeElement) {
+function loadTree(graphElement, codeElement, javaElement, team_number, tree_name) {
   let tree = new BehaviorTree(parseBehaviorTreeFromText(codeElement.value));
   showTree(tree, graphElement);
+  javaElement.value = generateJava(tree, team_number, tree_name);
 }
 
-function setupControls(graphElement, codeElement) {
+function setupControls(graphElement, codeElement, javaElement) {
   let treeSelect = document.getElementById('treeFileSelect'),
     treeInput = document.getElementById('treeFileInput'),
-    codeUpdate = document.getElementById('codeUpdate');
+    codeUpdate = document.getElementById('codeUpdate'),
+    teamElement = document.getElementById('team_number'),
+    nameElement = document.getElementById('tree_name');
 
   treeInput.addEventListener('change', function () {
     if (this.files.length < 1) {
@@ -93,7 +96,9 @@ function setupControls(graphElement, codeElement) {
     let reader = new FileReader();
     reader.onload = function (e) {
       codeElement.value = e.target.result
-      loadTree(graphElement, codeElement);
+      let team_number = teamElement.value;
+      let tree_name = nameElement.value;
+      loadTree(graphElement, codeElement, javaElement, team_number, tree_name);
     };
     reader.readAsText(this.files[0]);
   }, false);
@@ -106,7 +111,9 @@ function setupControls(graphElement, codeElement) {
 
 
   codeUpdate.addEventListener('click', function () {
-    loadTree(graphElement, codeElement)
+    let team_number = teamElement.value;
+    let tree_name = nameElement.value;
+    loadTree(graphElement, codeElement, javaElement, team_number, tree_name);
   }, false);
 
   d3.select('#tree-help__button')
@@ -129,7 +136,7 @@ function setupControls(graphElement, codeElement) {
       var svgUrl = URL.createObjectURL(svgBlob);
       var downloadLink = document.createElement("a");
       downloadLink.href = svgUrl;
-      downloadLink.download = "newesttree.svg";
+      downloadLink.download = nameElement.value + ".svg";
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
