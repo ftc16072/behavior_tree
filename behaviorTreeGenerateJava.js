@@ -15,6 +15,8 @@ function generateJava(tree, team_number, tree_name) {
   return result;
 }
 function generateImports(tree, team_number) {
+  let notIncluded = false;
+
   let result = `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Node`;
   for (let node of tree.nodes) {
     result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.${node[0]}`;
@@ -24,6 +26,10 @@ function generateImports(tree, team_number) {
   }
   for (let node of tree.conditions) {
     result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Conditions.${node[0]}`;
+    if (node.hasNot && !notIncluded) {
+      result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Not`;
+      notIncluded = true;
+    }
   }
   return result;
 }
@@ -37,7 +43,11 @@ function generateNode(indent, node, root = false) {
   if (node instanceof Action) {
     result += `new ${node.name}()`;
   } else if (node instanceof Condition) {
-    result += `new ${node.name}()`;
+    if (node.hasNot) {
+      result += `new Not(new ${node.name}(true))`;
+    } else {
+      result += `new ${node.name}()`;
+    }
   } else if (node instanceof Sequence) {
     result += `new Sequence(`;
     for (let child of node.children) {
