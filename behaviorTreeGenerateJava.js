@@ -16,18 +16,31 @@ function generateJava(tree, team_number, tree_name) {
 }
 function generateImports(tree, team_number) {
   let notIncluded = false;
+  var seen = {}
 
-  let result = `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Node`;
+  let result = `\nimport com.ftcteams.behaviortrees.Node;`;
   for (let node of tree.nodes) {
-    result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.${node[0]}`;
+    if (seen.hasOwnProperty(node[0])) {
+      continue;
+    }
+    seen[node[0]] = true;
+    result += `\nimport com.ftcteams.behaviortrees.${node[0]};`;
   }
   for (let node of tree.actions) {
+    if (seen.hasOwnProperty(node[0])) {
+      continue;
+    }
+    seen[node[0]] = true;
     result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Actions.${node[0]}`;
   }
   for (let node of tree.conditions) {
+    if (seen.hasOwnProperty(node[0])) {
+      continue;
+    }
+    seen[node[0]] = true;
     result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Conditions.${node[0]}`;
-    if (node.hasNot && !notIncluded) {
-      result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Not`;
+    if (node[1][0].hasNot && !notIncluded) {
+      result += `\nimport com.ftcteams.behaviortrees.Not;`;
       notIncluded = true;
     }
   }
