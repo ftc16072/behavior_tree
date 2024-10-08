@@ -31,14 +31,14 @@ function generateImports(tree, team_number) {
       continue;
     }
     seen[node[0]] = true;
-    result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Actions.${node[0]}`;
+    result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Actions.${node[0]};`;
   }
   for (let node of tree.conditions) {
     if (seen.hasOwnProperty(node[0])) {
       continue;
     }
     seen[node[0]] = true;
-    result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Conditions.${node[0]}`;
+    result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Conditions.${node[0]};`;
     if (node[1][0].hasNot && !notIncluded) {
       result += `\nimport com.ftcteams.behaviortrees.Not;`;
       notIncluded = true;
