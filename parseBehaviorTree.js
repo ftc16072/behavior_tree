@@ -66,7 +66,7 @@ function parseBehaviorTreeFromText(buf) {
           err = pushNode(new Sequence());
           break;
         case '?':
-          err = pushNode(new Fallback());
+          err = pushNode(new Failover());
           break;
         case '=':
           let number = parseInt(part.substring(pos + 1));

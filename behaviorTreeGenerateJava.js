@@ -83,8 +83,8 @@ function generateNode(indent, node, root = false) {
       result += generateNode(indent + 1, child);
     }
     result += ")";
-  } else if (node instanceof Fallback) {
-    result += "new Fallback(";
+  } else if (node instanceof Failover) {
+    result += "new Failover(";
     for (let child of node.children) {
       if (!firstChild) {
         result += ",";
@@ -119,7 +119,7 @@ function generateTree(indent, node) {
     for (let child of node.children) {
       result += generateTree(indent + 1, child);
     }
-  } else if (node instanceof Fallback) {
+  } else if (node instanceof Failover) {
     result += "?";
     for (let child of node.children) {
       result += generateTree(indent + 1, child);

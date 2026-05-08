@@ -1,5 +1,5 @@
 const NodeType = {
-  FALLBACK: 1,
+  FAILOVER: 1,
   SEQUENCE: 2,
   PARALLEL: 3,
   ACTION: 4,
@@ -59,7 +59,7 @@ class Node {
   }
 }
 
-class Fallback extends Node {
+class Failover extends Node {
   constructor(children = []) {
     super('?', NodeType.FALLBACK, children || []);
   }
@@ -187,7 +187,7 @@ function getFriendlyStatus(status) {
 if (typeof exports !== 'undefined' && exports) {
   exports.bt = {
     Node,
-    Fallback,
+    Failover,
     Sequence,
     Parallel,
     Action,

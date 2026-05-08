@@ -42,12 +42,12 @@ of error reporting as the parser will stop at the first error which
 will then be displayed directly on the page with the line number that
 it occurred on.  A correct tree must have exactly one root node.
 
-### Fallback Node
+### Failover Node
 
-A fallback node is written with a question mark, `?`, and will choose
+A failover node is written with a question mark, `?`, and will choose
 the first child that evaluates to _success_ or _running_.  If all
-children nodes have _failed_ then the fallback node will be _failed_
-as well.  Fallback nodes resemble an *OR* operator of programming
+children nodes have _failed_ then the failover back node will be _failed_
+as well.  Failover nodes resemble an *OR* operator of programming
 languages with short-circuite behavior.
 
 ### Condition Node
