@@ -115,7 +115,7 @@ function generateTree(indent, node) {
       result += generateTree(indent + 1, child);
     }
   } else if (node instanceof Parallel) {
-    result += `=${node.children.length}`;
+    result += `=${node.successCount}`;
     for (let child of node.children) {
       result += generateTree(indent + 1, child);
     }
