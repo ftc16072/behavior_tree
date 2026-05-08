@@ -95,7 +95,7 @@ function renderTree(parent, root, width, x0, x1) {
       fill = 'white',
       text_color = 'black';
 
-    if (k == NodeType.SEQUENCE || k == NodeType.FAILOVER|| k == NodeType.PARALLEL) {
+    if (k == NodeType.SEQUENCE || k == NodeType.FAILOVER|| k == NodeType.PARALLEL | k == NodeType.NOT) {
       if (active) {
         fill = color;
         color = '#444';
@@ -180,6 +180,6 @@ function renderTree(parent, root, width, x0, x1) {
     var status = getFriendlyStatus(n.data.status());
     d3.select(this)
       .append("svg:title")
-      .text(n => `Node: ${n.data.hasNot ? "NOT " : ""}${n.data.name}\nActive: ${active}\nStatus: ${status}`);
+      .text(n => `Node: ${n.data.name}\nActive: ${active}\nStatus: ${status}`);
   });
 }

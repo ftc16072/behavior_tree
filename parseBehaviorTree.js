@@ -38,7 +38,6 @@ function parseBehaviorTreeFromText(buf) {
   const lines = buf.split('\n');
   let lineNum = 0;
   for (let line of lines) {
-    let not = false;
     indent = 0;
     lineNum++;
     for (let part of line.split(' ')) {
@@ -51,10 +50,6 @@ function parseBehaviorTreeFromText(buf) {
         indent++;
         pos++;
       }
-      while (part[pos] === '!') {
-        not = !not;
-        pos++;
-      }
       if (pos >= part.length) {
         continue;
       }
@@ -63,25 +58,28 @@ function parseBehaviorTreeFromText(buf) {
           if (part[pos + 1] != '>') {
             throw ParseException(expect('->', part[pos + 1]), lineNum);
           }
-          err = pushNode(new Sequence(not));
+          err = pushNode(new Sequence());
+          break;
+        case '!':
+          err = pushNode(new Not());
           break;
         case '?':
-          err = pushNode(new Failover(not));
+          err = pushNode(new Failover());
           break;
         case '=':
           let number = parseInt(part.substring(pos + 1));
           if (isNaN(number)) {
             throw ParseException(expect('number', part.substring(pos + 1)), lineNum);
           }
-          err = pushNode(new Parallel(not, number));
+          err = pushNode(new Parallel(number));
           break;
         case '[':
           let actionName = part.substring(pos + 1, part.length - 1);
-          err = pushNode(new Action(actionName, not));
+          err = pushNode(new Action(actionName));
           break;
         case '(':
           let conditionName = part.substring(pos + 1, part.length - 1);
-          err = pushNode(new Condition(conditionName, not));
+          err = pushNode(new Condition(conditionName));
           break;
         default:
           throw ParseException(`Expecting '|', '-', '!', '[', or '(' but have '${part[pos]}'`, lineNum);

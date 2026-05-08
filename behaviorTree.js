@@ -2,8 +2,9 @@ const NodeType = {
   FAILOVER: 1,
   SEQUENCE: 2,
   PARALLEL: 3,
-  ACTION: 4,
-  CONDITION: 5
+  NOT: 4,
+  ACTION: 5,
+  CONDITION: 6,
 }
 
 const NodeStatus = {
@@ -12,22 +13,14 @@ const NodeStatus = {
   RUNNING: 3
 }
 class Node {
-  constructor(name, hasNot, nodeType, children = undefined) {
+  constructor(name, nodeType, children = undefined) {
     this.name = name
     this.nodeType = nodeType
-    this.hasNot = hasNot
     this.children = children || null;
     this._active = false
     this.nodeStatus = NodeStatus.FAILED;
   }
   status() {
-    if (this.hasNot) {
-      if (this.nodeStatus == NodeStatus.SUCCESS) {
-        return NodeStatus.FAILED;
-      } else if (this.nodeStatus == NodeStatus.FAILED) {
-        return NodeStatus.SUCCESS;
-      }
-    }
     return this.nodeStatus;
   }
   setStatus(status) {
@@ -68,8 +61,8 @@ class Node {
 }
 
 class Failover extends Node {
-  constructor(hasNot, children = []) {
-    super('?', hasNot, NodeType.FAILOVER, children || []);
+  constructor(children = []) {
+    super('?', NodeType.FAILOVER, children || []);
   }
   tick() {
     this.setActive(true);
@@ -86,8 +79,8 @@ class Failover extends Node {
 }
 
 class Sequence extends Node {
-  constructor(hasNot, children = []) {
-    super('\u2192', hasNot, NodeType.SEQUENCE, children);
+  constructor(children = []) {
+    super('\u2192', NodeType.SEQUENCE, children);
   }
   tick() {
     this.setActive(true);
@@ -102,10 +95,28 @@ class Sequence extends Node {
     return this.status();
   }
 }
+class Not extends Node {
+  constructor(children = []) {
+    super('!', NodeType.NOT, children);
+  }
+  tick() {
+    this.setActive(true);
+    let s = this.children[0].tick();
+    if (s == NodeStatus.SUCCESS) {
+      this.setStatus( NodeStatus.FAILED );
+    } else if (s == NodeStatus.FAILED) {
+      this.setStatus( NodeStatus.SUCCESS );
+    }
+    else{
+      this.setStatus(s);
+    }
+    return this.status();
+  }
+}
 
 class Parallel extends Node {
-  constructor(hasNot, successCount, children = []) {
-    super('\u21C9', hasNot, NodeType.PARALLEL, children || []);
+  constructor(successCount, children = []) {
+    super('\u21C9', NodeType.PARALLEL, children || []);
     this.successCount = successCount;
   }
   tick() {
@@ -136,8 +147,8 @@ class Parallel extends Node {
   }
 }
 class Action extends Node {
-  constructor(name, hasNot, status = NodeStatus.RUNNING) {
-    super(name, hasNot, NodeType.ACTION);
+  constructor(name, status = NodeStatus.RUNNING) {
+    super(name, NodeType.ACTION);
     this.setStatus(status);
   }
   nextStatus() {
@@ -152,7 +163,7 @@ class Action extends Node {
 }
 class Condition extends Node {
   constructor(name, hasNot, status = NodeStatus.FAILED) {
-    super(name, hasNot, NodeType.CONDITION);
+    super(name, NodeType.CONDITION);
     this.hasNot = hasNot;
     this.setStatus(status);
   }
@@ -189,6 +200,7 @@ if (typeof exports !== 'undefined' && exports) {
     Failover,
     Sequence,
     Parallel,
+    Not,
     Action,
     Condition,
     NodeType,
