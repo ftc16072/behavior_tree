@@ -66,9 +66,9 @@ level of indentation within the tree.  Multiple indentation markers
 can be placed one after the other to increase the level of indentation
 and thus increase the height of the tree.
 
-With fallback and condition nodes along with indentation markers we
+With failover and condition nodes along with indentation markers we
 now have enough syntax to create a simple behavior tree.  Here we have
-a tree with a height of one, has one fallback node, and two condition
+a tree with a height of one, has one failover node, and two condition
 
 ```tree
 ?
@@ -77,7 +77,7 @@ a tree with a height of one, has one fallback node, and two condition
 ```
 
 In this example, `(Condition One)` and `(Condition Two)` are child
-nodes of the fallback node which will be in a _success_ state when
+nodes of the failover node which will be in a _success_ state when
 either of the children are in a _success_ state.
 
 ### Action Node
@@ -107,7 +107,7 @@ in a _failed_ state when there is actually free space available.
 ### Parallel Node
 
 The parallel node is written as `=N` where `N` is some positive
-integer.  The parallel node, like fallback and sequence nodes, can
+integer.  The parallel node, like failover and sequence nodes, can
 have an arbitrary number of children and is in a _success_ state when
 the number of children in a _success_ state is greater than or equal
 to `N`.  If number of children in a _failed_ state is greater than the

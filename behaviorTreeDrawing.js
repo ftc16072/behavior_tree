@@ -95,7 +95,7 @@ function renderTree(parent, root, width, x0, x1) {
       fill = 'white',
       text_color = 'black';
 
-    if (k == NodeType.SEQUENCE || k == NodeType.FALLBACK || k == NodeType.PARALLEL) {
+    if (k == NodeType.SEQUENCE || k == NodeType.FAILOVER|| k == NodeType.PARALLEL) {
       if (active) {
         fill = color;
         color = '#444';

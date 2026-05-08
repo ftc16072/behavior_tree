@@ -61,7 +61,7 @@ class Node {
 
 class Failover extends Node {
   constructor(children = []) {
-    super('?', NodeType.FALLBACK, children || []);
+    super('?', NodeType.FAILOVER, children || []);
   }
   tick() {
     this.setActive(true);
