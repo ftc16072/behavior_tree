@@ -73,7 +73,7 @@ function generateNode(indent, node, root = false) {
     }
     result += ")";
   } else if (node instanceof Parallel) {
-    result += `new Parallel(${node.children.length},`;
+    result += `new Parallel(${node.successCount},`;
     for (let child of node.children) {
       if (!firstChild) {
         result += ",";
