@@ -39,10 +39,6 @@ function generateImports(tree, team_number) {
     }
     seen[node[0]] = true;
     result += `\nimport org.firstinspires.ftc.teamcode.ftc${team_number}.BehaviorTrees.Conditions.${node[0]};`;
-    if (node[1][0].hasNot && !notIncluded) {
-      result += `\nimport com.ftcteams.behaviortrees.Not;`;
-      notIncluded = true;
-    }
   }
   return result;
 }
@@ -94,6 +90,16 @@ function generateNode(indent, node, root = false) {
       result += generateNode(indent + 1, child);
     }
     result += ")";
+  } else if (node instanceof Not) {
+    result += "new Not(";
+    for (let child of node.children) {
+      if (!firstChild) {
+        result += ",";
+      } else {
+        firstChild = false;
+      }
+      result += generateNode(indent + 1, child);
+    }    
   }
   if (root) {
     result += ";";
@@ -121,6 +127,11 @@ function generateTree(indent, node) {
     }
   } else if (node instanceof Failover) {
     result += "?";
+    for (let child of node.children) {
+      result += generateTree(indent + 1, child);
+    }
+  } else if (node instanceof Not) {
+    result += "!";
     for (let child of node.children) {
       result += generateTree(indent + 1, child);
     }

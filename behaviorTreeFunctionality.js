@@ -44,6 +44,8 @@ class BehaviorTree {
       this.addToArrayMap(this.nodes, "Parallel", node);
     } else if (node instanceof Failover) {
       this.addToArrayMap(this.nodes, "Failover", node);
+    } else if (node instanceof Not) {
+      this.addToArrayMap(this.nodes, "Not", node);
     }
     if (node.children) {
       node.children.forEach(c => this.extractActionsAndConditions(c));
