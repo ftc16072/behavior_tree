@@ -22,10 +22,10 @@ class Node {
   }
   status() {
     if (this.hasNot) {
-      if (this.nodeStatus == SUCCESS) {
-        return FAILED;
-      } else if (this.nodeStatus == FAILED) {
-        return SUCCESS;
+      if (this.nodeStatus == NodeStatus.SUCCESS) {
+        return NodeStatus.FAILED;
+      } else if (this.nodeStatus == NodeStatus.FAILED) {
+        return NodeStatus.SUCCESS;
       }
     }
     return this.nodeStatus;
