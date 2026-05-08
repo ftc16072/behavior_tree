@@ -77,7 +77,7 @@ function parseBehaviorTreeFromText(buf) {
           break;
         case '[':
           let actionName = part.substring(pos + 1, part.length - 1);
-          err = pushNode(new Action(not, actionName));
+          err = pushNode(new Action(actionName, not));
           break;
         case '(':
           let conditionName = part.substring(pos + 1, part.length - 1);
