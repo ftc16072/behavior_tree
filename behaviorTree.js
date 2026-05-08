@@ -12,14 +12,22 @@ const NodeStatus = {
   RUNNING: 3
 }
 class Node {
-  constructor(name, nodeType, children = undefined) {
+  constructor(name, hasNot, nodeType, children = undefined) {
     this.name = name
     this.nodeType = nodeType
+    this.hasNot = hasNot
     this.children = children || null;
     this._active = false
     this.nodeStatus = NodeStatus.FAILED;
   }
   status() {
+    if (this.hasNot) {
+      if (this.nodeStatus == SUCCESS) {
+        return FAILED;
+      } else if (this.nodeStatus == FAILED) {
+        return SUCCESS;
+      }
+    }
     return this.nodeStatus;
   }
   setStatus(status) {
@@ -60,8 +68,8 @@ class Node {
 }
 
 class Failover extends Node {
-  constructor(children = []) {
-    super('?', NodeType.FAILOVER, children || []);
+  constructor(hasNot, children = []) {
+    super('?', hasNot, NodeType.FAILOVER, children || []);
   }
   tick() {
     this.setActive(true);
@@ -78,8 +86,8 @@ class Failover extends Node {
 }
 
 class Sequence extends Node {
-  constructor(children = []) {
-    super('\u2192', NodeType.SEQUENCE, children);
+  constructor(hasNot, children = []) {
+    super('\u2192', hasNot, NodeType.SEQUENCE, children);
   }
   tick() {
     this.setActive(true);
@@ -96,8 +104,8 @@ class Sequence extends Node {
 }
 
 class Parallel extends Node {
-  constructor(successCount, children = []) {
-    super('\u21C9', NodeType.PARALLEL, children || []);
+  constructor(hasNot, successCount, children = []) {
+    super('\u21C9', hasNot, NodeType.PARALLEL, children || []);
     this.successCount = successCount;
   }
   tick() {
@@ -128,8 +136,8 @@ class Parallel extends Node {
   }
 }
 class Action extends Node {
-  constructor(name, status = NodeStatus.RUNNING) {
-    super(name, NodeType.ACTION);
+  constructor(name, hasNot, status = NodeStatus.RUNNING) {
+    super(name, hasNot, NodeType.ACTION);
     this.setStatus(status);
   }
   nextStatus() {
@@ -143,21 +151,12 @@ class Action extends Node {
   }
 }
 class Condition extends Node {
-  constructor(name, hasNot = false, status = NodeStatus.FAILED) {
-    super(name, NodeType.CONDITION);
+  constructor(name, hasNot, status = NodeStatus.FAILED) {
+    super(name, hasNot, NodeType.CONDITION);
     this.hasNot = hasNot;
     this.setStatus(status);
   }
-  status() {
-    let nodeStatus = super.status();
-    if (this.hasNot) {
-      switch (nodeStatus) {
-        case NodeStatus.SUCCESS: return NodeStatus.FAILED;
-        case NodeStatus.FAILED: return NodeStatus.SUCCESS;
-      }
-    }
-    return nodeStatus;
-  }
+
   nextStatus(status) {
     if (this.nodeStatus == NodeStatus.SUCCESS) {
       this.setStatus(NodeStatus.FAILED);

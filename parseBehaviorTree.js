@@ -63,21 +63,21 @@ function parseBehaviorTreeFromText(buf) {
           if (part[pos + 1] != '>') {
             throw ParseException(expect('->', part[pos + 1]), lineNum);
           }
-          err = pushNode(new Sequence());
+          err = pushNode(new Sequence(not));
           break;
         case '?':
-          err = pushNode(new Failover());
+          err = pushNode(new Failover(not));
           break;
         case '=':
           let number = parseInt(part.substring(pos + 1));
           if (isNaN(number)) {
             throw ParseException(expect('number', part.substring(pos + 1)), lineNum);
           }
-          err = pushNode(new Parallel(number));
+          err = pushNode(new Parallel(not, number));
           break;
         case '[':
           let actionName = part.substring(pos + 1, part.length - 1);
-          err = pushNode(new Action(actionName));
+          err = pushNode(new Action(not, actionName));
           break;
         case '(':
           let conditionName = part.substring(pos + 1, part.length - 1);
